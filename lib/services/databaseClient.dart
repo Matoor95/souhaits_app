@@ -65,4 +65,11 @@ class DatabaseClient {
         await db.query('article', where: "list = ?", whereArgs: [id]);
     return mapList.map((map) => Article.fromMap(map)).toList();
   }
+
+  // ajouter list
+  Future<bool> addItemList(String text) async {
+    Database db = await database;
+    await db.insert('list', {"name": text});
+    return true;
+  }
 }
