@@ -72,4 +72,22 @@ class DatabaseClient {
     await db.insert('list', {"name": text});
     return true;
   }
+
+  // ajouter un article
+  Future<bool> upsert(Article article) async {
+    Database db = await database;
+    (article.id == null)
+        ? article.id = await db.insert('article', article.toMap())
+        : await db.update('article', article.toMap(),
+            where: 'id= ?', whereArgs: [article.id]);
+    return true;
+  }
+
+  Future<bool> removeItem(ItemList itemList) async {
+    Database db = await database;
+    await db.delete('list', where: 'id = ?', whereArgs: [itemList.id]);
+    // supprimer tout les articles associes
+    await db.delete('article', where: 'list = ?', whereArgs: [itemList.id]);
+    return true;
+  }
 }
